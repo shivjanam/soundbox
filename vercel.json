@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "soundbox-dynamic-qr-bridge",
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}
