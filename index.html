@@ -120,6 +120,7 @@
     <div class="nav-links">
       <a href="#problem">Problem</a>
       <a href="#features">Features</a>
+      <a href="#api">API</a>
       <a href="#how">How It Works</a>
       <a href="#audience">Who It's For</a>
     </div>
@@ -150,16 +151,17 @@
     </div>
     <div class="hero-visual">
       <div class="code">
-<span class="cmt">// Trigger from any ERP/ECR — no SDK, no firmware work</span><br>
-POST /api/v1/confirm HTTP/1.1<br>
+<span class="cmt">// Generate a Dynamic QR — one POST, no ERP changes</span><br>
+POST /api/v1/dqr/generate HTTP/1.1<br>
 Host: localhost:8080<br>
 Content-Type: application/json<br><br>
 {<br>
 &nbsp;&nbsp;<span class="str">"amount"</span>: <span class="num">1499.00</span>,<br>
-&nbsp;&nbsp;<span class="str">"txn_id"</span>: <span class="str">"INV-2026-0417"</span>,<br>
-&nbsp;&nbsp;<span class="str">"device_id"</span>: <span class="str">"SB-0042"</span><br>
+&nbsp;&nbsp;<span class="str">"txn_id"</span>: <span class="str">"INV20260417"</span>,<br>
+&nbsp;&nbsp;<span class="str">"device_id"</span>: <span class="str">"SB0042"</span>,<br>
+&nbsp;&nbsp;<span class="str">"order_id"</span>: <span class="str">"773437478"</span><br>
 }<br><br>
-<span class="cmt">// → 200 OK in &lt; 50 ms · Soundbox speaks &amp; displays</span>
+<span class="cmt">// → 200 OK · Soundbox displays DQR + speaks amount</span>
       </div>
       <div class="flow">
         <div class="flow-chip">ERP / ECR</div>
@@ -269,13 +271,52 @@ Content-Type: application/json<br><br>
         <div class="step-num">2</div>
         <h4>Trigger a REST API Call</h4>
         <p>From your billing/ERP system, fire one lightweight POST with amount, transaction ID, and device ID.</p>
-        <div class="code-mini">POST /api/v1/confirm { amount, txn_id, device_id }</div>
+        <div class="code-mini">POST /api/v1/dqr/generate { amount, txn_id, device_id, order_id }</div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <h4>Instant Broadcast</h4>
         <p>Payment confirmation is broadcast to the Soundbox speaker and Dynamic QR display in real time.</p>
         <div class="code-mini">200 OK · &lt; 50 ms · audio + display</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- API CONTRACT -->
+<section id="api" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">API at a Glance</div>
+      <h2>One Request. One Callback. Done.</h2>
+      <p class="section-sub">A minimal, well-defined contract your ERP/ECR already speaks — JSON over HTTP.</p>
+    </div>
+    <div class="ps">
+      <div class="panel">
+        <h3><span class="icon icon-good">→</span> Generate Dynamic QR</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:14px">POST <code style="color:var(--accent)">/api/v1/dqr/generate</code> — triggers the Soundbox to display the DQR and announce the amount.</p>
+        <div class="code">
+{<br>
+&nbsp;&nbsp;<span class="str">"amount"</span>: <span class="num">1499.00</span>,<br>
+&nbsp;&nbsp;<span class="str">"txn_id"</span>: <span class="str">"INV20260417"</span>,<br>
+&nbsp;&nbsp;<span class="str">"device_id"</span>: <span class="str">"SB0042"</span>,<br>
+&nbsp;&nbsp;<span class="str">"order_id"</span>: <span class="str">"773437478"</span><br>
+}
+        </div>
+      </div>
+      <div class="panel">
+        <h3><span class="icon icon-good">✓</span> Payment Success Callback</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:14px">Delivered to your ERP/ECR when the DQR payment succeeds — includes RRN and transaction time.</p>
+        <div class="code">
+{<br>
+&nbsp;&nbsp;<span class="str">"amount"</span>: <span class="num">1499.00</span>,<br>
+&nbsp;&nbsp;<span class="str">"txn_id"</span>: <span class="str">"INV20260417"</span>,<br>
+&nbsp;&nbsp;<span class="str">"device_id"</span>: <span class="str">"SB0042"</span>,<br>
+&nbsp;&nbsp;<span class="str">"order_id"</span>: <span class="str">"773437478"</span>,<br>
+&nbsp;&nbsp;<span class="str">"rrn"</span>: <span class="str">"485488585545"</span>,<br>
+&nbsp;&nbsp;<span class="str">"txn_time"</span>: <span class="str">"2026-10-15 01:36:20"</span><br>
+}
+        </div>
       </div>
     </div>
   </div>
